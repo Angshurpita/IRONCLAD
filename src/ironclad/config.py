@@ -43,7 +43,7 @@ class IroncladSettings(BaseSettings):
         default="https://openrouter.ai/api/v1", validation_alias="OPENROUTER_BASE_URL"
     )
     openrouter_model: str = Field(
-        default="google/gemma-4-26b-a4b", validation_alias="OPENROUTER_MODEL"
+        default="google/gemma-4-31b-it:free", validation_alias="OPENROUTER_MODEL"
     )
 
     # Local Inference (Ollama)

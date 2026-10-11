@@ -1,4 +1,4 @@
-"""System and evidence prompt templates for Google Gemma 4 26B A4B."""
+"""System and evidence prompt templates for Google Gemma."""
 
 from typing import List
 

@@ -17,7 +17,7 @@
 2. [Key Capabilities](#key-capabilities)
 3. [Prerequisites & Installation](#prerequisites--installation)
 4. [Quickstart Guide](#quickstart-guide)
-5. [Inference Setup (Google Gemma 4 26B A4B)](#inference-setup)
+5. [Inference Setup (Google Gemma 4 31B)](#inference-setup)
    - [Option A: Hosted Cloud via OpenRouter](#option-a-hosted-cloud-via-openrouter-recommended)
    - [Option B: Local Offline via Ollama](#option-b-local-offline-via-ollama)
 6. [CLI Command Reference](#cli-command-reference)
@@ -36,7 +36,7 @@
 
 PROJECT IRONCLAD is an installable command-line tool built for developers. You point it at any codebase or documentation repository, ingest the contents into a self-contained local knowledge base (`.ironclad/`), and ask natural-language technical questions.
 
-Answers are synthesized using **Google Gemma 4 26B A4B**, strictly grounded on retrieved passages, with every single claim mapped back to exact verified file paths and line ranges.
+Answers are synthesized using **Google Gemma 4 31B** (`google/gemma-4-31b-it:free`), strictly grounded on retrieved passages, with every single claim mapped back to exact verified file paths and line ranges.
 
 ```
                               ┌───────────────────────────────────┐
@@ -71,7 +71,7 @@ Answers are synthesized using **Google Gemma 4 26B A4B**, strictly grounded on r
                                    [6. Token Budget Selector]
                                                 │ (Hard limit context window packing)
                                                 ▼
-                                   [7. Google Gemma 4 26B A4B]
+                                   [7. Google Gemma 4 31B]
                                       OpenRouter (Cloud) / Ollama (Local)
                                                 │ (Strict JSON structured generation)
                                                 ▼
@@ -166,7 +166,7 @@ Output:
 │ hashed password in auth.py [1]. Upon successful verification, a JWT token   │
 │ is issued with an expiration time configured by TOKEN_EXPIRY_SECONDS [2].  │
 │                                                                            │
-│ Model: google/gemma-4-26b-a4b | Latency: 1240ms | Evidence Chunks: 4       │
+│ Model: google/gemma-4-31b-it:free | Latency: 1240ms | Evidence Chunks: 4     │
 ╰────────────────────────────────────────────────────────────────────────────╯
  Verified Ground-Truth Citations
 ┏━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
@@ -195,11 +195,11 @@ ironclad status
 
 ## Inference Setup
 
-PROJECT IRONCLAD is optimized for **Google Gemma 4 26B A4B** (`google/gemma-4-26b-a4b`). You can run it either through cloud inference (OpenRouter) or completely offline (Ollama).
+PROJECT IRONCLAD is powered by **Google Gemma 4 31B** (`google/gemma-4-31b-it:free`). You can run it either through cloud inference (OpenRouter) or completely offline (Ollama).
 
 ### Option A: Hosted Cloud via OpenRouter (Recommended)
 
-OpenRouter hosts Gemma 4 26B A4B with high throughput and low latency.
+OpenRouter hosts Gemma 4 31B with high throughput and low latency.
 
 1. Obtain an API key from [openrouter.ai](https://openrouter.ai/).
 2. Set the key in your shell or create a `.env` file in your project root:
@@ -212,7 +212,7 @@ Or configure via `.env`:
 ```ini
 IRONCLAD_INFERENCE_PROVIDER=openrouter
 OPENROUTER_API_KEY=sk-or-v1-xxxxxxxxxxxxxxxxxxxx
-OPENROUTER_MODEL=google/gemma-4-26b-a4b
+OPENROUTER_MODEL=google/gemma-4-31b-it:free
 ```
 
 ### Option B: Local Offline via Ollama
@@ -293,7 +293,7 @@ All settings can be configured via environment variables or a `.env` file in the
 | `IRONCLAD_INFERENCE_PROVIDER` | `openrouter` | Inference service (`openrouter` or `ollama`). |
 | `OPENROUTER_API_KEY` | *(None)* | OpenRouter API authentication key. |
 | `OPENROUTER_BASE_URL` | `https://openrouter.ai/api/v1` | OpenRouter API base endpoint. |
-| `OPENROUTER_MODEL` | `google/gemma-4-26b-a4b` | Hosted Gemma model identifier. |
+| `OPENROUTER_MODEL` | `google/gemma-4-31b-it:free` | Hosted Gemma model identifier. |
 | `OLLAMA_BASE_URL` | `http://localhost:11434` | Local Ollama HTTP service URL. |
 | `OLLAMA_MODEL` | `gemma4:26b` | Local Ollama model tag. |
 | `IRONCLAD_EMBEDDING_PROVIDER` | `local` | Embedding provider (`local`). |

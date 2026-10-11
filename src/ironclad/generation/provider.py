@@ -1,4 +1,4 @@
-"""LLM inference providers for Google Gemma 4 26B A4B with OpenRouter and Ollama."""
+"""LLM inference providers for Google Gemma with OpenRouter and Ollama."""
 
 import json
 import logging
@@ -37,7 +37,7 @@ class BaseInferenceProvider(ABC):
 
 class OpenRouterGemmaProvider(BaseInferenceProvider):
     """
-    Hosted inference provider connecting to OpenRouter for Gemma 4 26B A4B.
+    Hosted inference provider connecting to OpenRouter for Gemma models.
     Implements bounded exponential backoff retries, privacy warnings, and timeout protection.
     """
 
@@ -256,7 +256,7 @@ class MockGemmaProvider(BaseInferenceProvider):
 
     @property
     def model_name(self) -> str:
-        return "mock-gemma-4-26b"
+        return "mock-gemma"
 
     def generate(self, prompt: str, system_prompt: str) -> str:
         return json.dumps(
