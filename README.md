@@ -3,8 +3,8 @@
 **A minimal, ultra-reliable Retrieval-Augmented Generation (RAG) developer CLI.**
 
 [![Python Version](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-58%20passed-brightgreen.svg)]()
+[![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](LICENSE)
+[![Tests](https://img.shields.io/badge/tests-61%20passed-brightgreen.svg)]()
 [![Code Style](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 
 > **Philosophy: The Toyota Fortuner of RAG Systems**  
@@ -350,4 +350,4 @@ ruff format .
 ---
 
 ## License
-MIT License. Created for robust, production-minded developer RAG workflows.
+Apache-2.0 License. Created for robust, production-minded developer RAG workflows.
