@@ -152,6 +152,18 @@ def run_ingestion(
         for disc_file in files_to_process:
             is_new = disc_file.rel_path not in existing_docs
             try:
+                # If updating an existing modified file, purge its stale vectors from vector store
+                if not is_new:
+                    with metadata_store.connect() as conn:
+                        cursor = conn.cursor()
+                        cursor.execute(
+                            "SELECT chunk_id FROM chunks WHERE file_path = ?;",
+                            (disc_file.rel_path,),
+                        )
+                        old_chunk_ids = [r[0] for r in cursor.fetchall()]
+                    if old_chunk_ids:
+                        vector_store.delete_chunks(old_chunk_ids)
+
                 parser = get_parser_for_type(disc_file.doc_type)
                 parsed_doc = parser.parse(disc_file)
 

@@ -98,3 +98,11 @@ def test_incremental_updates_and_deletions(cli_runner: CliRunner, temp_project: 
     del_data = json.loads(del_res.stdout)
     assert del_data["files_deleted"] == 1
     assert del_data["total_files"] == 2
+
+    # Verify vector store vector count strictly matches total_chunks (no ghost vectors)
+    from ironclad.config import IroncladSettings
+    from ironclad.retrieval.vector import ChromaVectorStore
+
+    settings = IroncladSettings(project_root=temp_project)
+    vstore = ChromaVectorStore(settings.vector_store_path)
+    assert vstore.count() == del_data["total_chunks"]
