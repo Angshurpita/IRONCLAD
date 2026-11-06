@@ -12,6 +12,7 @@ def test_deterministic_hash_provider():
     """Verify offline deterministic hash provider properties."""
     provider = DeterministicHashEmbeddingProvider(dimension=384)
     assert provider.dimension == 384
+    assert provider.provider_name == "deterministic-hash"
 
     vec = provider.embed_query("authentication token")
     assert len(vec) == 384
@@ -26,6 +27,7 @@ def test_chroma_onnx_provider():
     """Verify local Chroma ONNX model produces 384-dimensional embeddings."""
     provider = ChromaONNXEmbeddingProvider()
     assert provider.dimension == 384
+    assert provider.provider_name == "local-onnx"
 
     vec = provider.embed_query("retrieval augmented generation")
     assert len(vec) == 384

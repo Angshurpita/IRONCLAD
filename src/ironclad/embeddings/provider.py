@@ -17,6 +17,12 @@ class BaseEmbeddingProvider(ABC):
 
     @property
     @abstractmethod
+    def provider_name(self) -> str:
+        """Name of the embedding provider."""
+        pass
+
+    @property
+    @abstractmethod
     def model_name(self) -> str:
         """Name of the embedding model."""
         pass
@@ -62,6 +68,10 @@ class ChromaONNXEmbeddingProvider(BaseEmbeddingProvider):
         return self._ef
 
     @property
+    def provider_name(self) -> str:
+        return "local-onnx"
+
+    @property
     def model_name(self) -> str:
         return self._model_name
 
@@ -97,6 +107,10 @@ class DeterministicHashEmbeddingProvider(BaseEmbeddingProvider):
     def __init__(self, dimension: int = 384, model_name: str = "hash-projector-384"):
         self._dimension = dimension
         self._model_name = model_name
+
+    @property
+    def provider_name(self) -> str:
+        return "deterministic-hash"
 
     @property
     def model_name(self) -> str:
@@ -144,7 +158,7 @@ def get_embedding_provider(
         return DeterministicHashEmbeddingProvider()
 
     try:
-        provider = ChromaONNXEmbeddingProvider()
+        provider = ChromaONNXEmbeddingProvider(model_name=settings.embedding_model)
         return provider
     except Exception as e:
         logger.warning(

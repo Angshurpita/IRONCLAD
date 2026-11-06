@@ -93,6 +93,9 @@ def test_doctor_diagnostics_comprehensive(cli_runner: CliRunner, temp_project: P
     vstore_check = next(c for c in report.checks if c.name == "Vector Store Health")
     assert vstore_check.passed is True
 
+    emb_check = next(c for c in report.checks if c.name == "Local Embedding Model Runtime")
+    assert emb_check.passed is True
+
 
 def test_edge_cases_empty_binary_unicode(cli_runner: CliRunner, temp_project: Path):
     """Verify ingestion gracefully handles zero-byte files, nested directories, unicode, and binary files."""
