@@ -8,7 +8,7 @@ from typing import Optional
 
 import httpx
 
-from ironclad.config import IroncladSettings
+from ironclad.config import IroncladSettings, normalize_openrouter_model
 from ironclad.errors import ConfigurationError, InferenceError
 
 logger = logging.getLogger("ironclad.inference")
@@ -50,16 +50,7 @@ class OpenRouterGemmaProvider(BaseInferenceProvider):
             )
         self.api_key = settings.openrouter_api_key.get_secret_value()
         self.base_url = settings.openrouter_base_url.rstrip("/")
-        model = settings.openrouter_model
-        if model in ("google/gemma-4-26b-a4b", "google/gemma-4-26b"):
-            model = "google/gemma-4-26b-a4b-it"
-        elif model in ("google/gemma-4-26b-a4b:free", "google/gemma-4-26b:free"):
-            model = "google/gemma-4-26b-a4b-it:free"
-        elif model == "google/gemma-4-31b":
-            model = "google/gemma-4-31b-it"
-        elif model == "google/gemma-4-31b:free":
-            model = "google/gemma-4-31b-it:free"
-        self.model = model
+        self.model = normalize_openrouter_model(settings.openrouter_model)
         self.timeout = settings.http_timeout_seconds
         self.max_retries = max(settings.max_retries, 4)
 

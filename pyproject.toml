@@ -45,3 +45,4 @@ ignore = ["E501", "B008"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+asyncio_default_fixture_loop_scope = "function"

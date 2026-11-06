@@ -19,6 +19,22 @@ def mask_secret(secret: Optional[SecretStr | str]) -> str:
     return f"{raw[:4]}...{raw[-4:]}"
 
 
+def normalize_openrouter_model(model: str) -> str:
+    """Normalize model shorthands or missing instruction-tuned suffixes."""
+    if not model:
+        return model
+    cleaned = model.strip()
+    if cleaned in ("google/gemma-4-26b-a4b", "google/gemma-4-26b"):
+        return "google/gemma-4-26b-a4b-it"
+    if cleaned in ("google/gemma-4-26b-a4b:free", "google/gemma-4-26b:free"):
+        return "google/gemma-4-26b-a4b-it:free"
+    if cleaned == "google/gemma-4-31b":
+        return "google/gemma-4-31b-it"
+    if cleaned == "google/gemma-4-31b:free":
+        return "google/gemma-4-31b-it:free"
+    return cleaned
+
+
 class IroncladSettings(BaseSettings):
     """Central configuration settings for IRONCLAD."""
 

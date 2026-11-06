@@ -4,7 +4,12 @@ from pathlib import Path
 
 from pydantic import SecretStr
 
-from ironclad.config import IroncladSettings, get_settings, mask_secret
+from ironclad.config import (
+    IroncladSettings,
+    get_settings,
+    mask_secret,
+    normalize_openrouter_model,
+)
 
 
 def test_mask_secret():
@@ -60,3 +65,13 @@ def test_get_settings_ancestor_resolution(temp_project: Path):
     settings = get_settings(sub_dir)
     assert settings.project_root == resolved_root
     assert settings.ironclad_path == kb_dir
+
+
+def test_normalize_openrouter_model():
+    """Verify OpenRouter model identifier normalization."""
+    assert normalize_openrouter_model("google/gemma-4-26b") == "google/gemma-4-26b-a4b-it"
+    assert normalize_openrouter_model("google/gemma-4-26b:free") == "google/gemma-4-26b-a4b-it:free"
+    assert normalize_openrouter_model("google/gemma-4-31b") == "google/gemma-4-31b-it"
+    assert normalize_openrouter_model("google/gemma-4-31b:free") == "google/gemma-4-31b-it:free"
+    assert normalize_openrouter_model("custom/model:tag") == "custom/model:tag"
+    assert normalize_openrouter_model("") == ""

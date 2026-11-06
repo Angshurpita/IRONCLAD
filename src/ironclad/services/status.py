@@ -7,7 +7,7 @@ from typing import List
 
 import httpx
 
-from ironclad.config import IroncladSettings
+from ironclad.config import IroncladSettings, normalize_openrouter_model
 from ironclad.models import DoctorCheck, DoctorReport, IndexStatus
 
 
@@ -361,13 +361,7 @@ def run_diagnostics(settings: IroncladSettings) -> DoctorReport:
                         try:
                             models_data = resp.json().get("data", [])
                             avail_ids = {m.get("id") for m in models_data if isinstance(m, dict)}
-                            target_m = settings.openrouter_model
-                            if target_m in ("google/gemma-4-26b-a4b", "google/gemma-4-26b"):
-                                target_m = "google/gemma-4-26b-a4b-it"
-                            elif target_m == "google/gemma-4-31b":
-                                target_m = "google/gemma-4-31b-it"
-                            elif target_m == "google/gemma-4-31b:free":
-                                target_m = "google/gemma-4-31b-it:free"
+                            target_m = normalize_openrouter_model(settings.openrouter_model)
                             model_found = target_m in avail_ids
                             checks.append(
                                 DoctorCheck(
