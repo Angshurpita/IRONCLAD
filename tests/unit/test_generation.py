@@ -14,11 +14,11 @@ def test_extract_json_payload_variants():
     assert extract_json_payload('{"answer": "hello"}') == {"answer": "hello"}
 
     # 2. Markdown fenced JSON
-    fenced = "Here is the response:\n```json\n{\n  \"answer\": \"hello from markdown\"\n}\n```\nHope that helps!"
+    fenced = 'Here is the response:\n```json\n{\n  "answer": "hello from markdown"\n}\n```\nHope that helps!'
     assert extract_json_payload(fenced)["answer"] == "hello from markdown"
 
     # 3. Leading and trailing commentary
-    commentary = "Sure! Here is the output:\n{\n  \"answer\": \"raw braced\"\n}\nThanks!"
+    commentary = 'Sure! Here is the output:\n{\n  "answer": "raw braced"\n}\nThanks!'
     assert extract_json_payload(commentary)["answer"] == "raw braced"
 
     # 4. Invalid non-JSON raises InferenceError

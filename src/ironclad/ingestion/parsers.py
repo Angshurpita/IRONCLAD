@@ -65,7 +65,7 @@ class SourceCodeParser(BaseParser):
     """
     Parser for source code files (Python, JS, TS, Java, C, C++, Go, Rust, etc.).
     Preserves exact line numbers and identifies functional headings (classes, functions).
-    
+
     Documented Limitations:
     - Uses regex structure detection rather than a full language-specific AST compiler.
     - Non-UTF-8 source files fall back to latin-1 encoding.
@@ -127,7 +127,7 @@ class MarkdownParser(BaseParser):
     """
     Parser for Markdown and documentation files.
     Extracts heading hierarchy (H1, H2, H3) and maps line ranges.
-    
+
     Documented Limitations:
     - Parses GFM headings; does not execute embedded scripts, HTML macros, or MathJax.
     """
@@ -210,7 +210,7 @@ class PDFParser(BaseParser):
     """
     Safe parser for PDF documents using pypdf.
     Synthesizes clean page-based line references.
-    
+
     Documented Limitations:
     - Extracts text from digital/searchable PDFs only. Does not OCR scanned images.
     - Encrypted, password-protected, or corrupted PDFs are caught and cleanly skipped.

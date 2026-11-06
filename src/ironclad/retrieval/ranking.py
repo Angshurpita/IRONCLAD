@@ -16,7 +16,7 @@ def select_context_by_budget(
 ) -> Tuple[List[SearchResult], int]:
     """
     Select top-ranked evidence chunks according to a strict token budget.
-    
+
     Ensures LLM context window is never exceeded while maximizing high-relevance evidence.
     Returns (selected_chunks, total_context_tokens).
     """
@@ -33,7 +33,9 @@ def select_context_by_budget(
         elif not selected:
             # If the first chunk alone exceeds budget, truncate gracefully
             chars_budget = available_budget * 4
-            truncated_content = cand.content[:chars_budget] + "\n... [truncated to fit token budget]"
+            truncated_content = (
+                cand.content[:chars_budget] + "\n... [truncated to fit token budget]"
+            )
             truncated_cand = SearchResult(
                 chunk_id=cand.chunk_id,
                 file_path=cand.file_path,

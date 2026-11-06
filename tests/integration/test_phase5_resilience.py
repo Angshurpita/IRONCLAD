@@ -55,7 +55,7 @@ def test_embedding_model_change_triggers_reindex(cli_runner: CliRunner, temp_pro
 
     # Switch embedding model configuration
     settings_2 = IroncladSettings(project_root=temp_project, embedding_model="hash-projector-384")
-    
+
     # Inconsistency is reported by status before ingest
     status_2 = get_status(settings_2)
     assert status_2.is_consistent is False

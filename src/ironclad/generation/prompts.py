@@ -45,7 +45,9 @@ def build_rag_user_prompt(query: str, evidence: List[SearchResult]) -> str:
 
     context_blocks: List[str] = []
     for idx, item in enumerate(evidence, start=1):
-        heading_info = f" | Heading: {item.heading}" if hasattr(item, "heading") and item.heading else ""
+        heading_info = (
+            f" | Heading: {item.heading}" if hasattr(item, "heading") and item.heading else ""
+        )
         header = f"[Source {idx}]: {item.file_path} (Lines {item.start_line}-{item.end_line}{heading_info})"
         block = f"{header}\n```\n{item.content.strip()}\n```"
         context_blocks.append(block)

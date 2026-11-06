@@ -215,8 +215,6 @@ def run_ingestion(
         all_chunks = metadata_store.get_all_chunks()
         summary.total_files = len(final_docs)
         summary.total_chunks = len(all_chunks)
-        summary.duration_seconds = (
-            datetime.now(timezone.utc) - start_time
-        ).total_seconds()
+        summary.duration_seconds = (datetime.now(timezone.utc) - start_time).total_seconds()
 
     return summary

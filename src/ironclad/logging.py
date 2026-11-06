@@ -15,7 +15,12 @@ err_console = Console(stderr=True)
 KEY_REDACT_PATTERNS = [
     (re.compile(r"sk-[a-zA-Z0-9_\-]{8,}"), "***REDACTED***"),
     (re.compile(r"(Bearer\s+)[a-zA-Z0-9_\-\.]{8,}", re.IGNORECASE), r"\1***REDACTED***"),
-    (re.compile(r"((?:api[_-]?key|password|token)\s*[:=]\s*['\"]?)([^'\"\s]{8,})", re.IGNORECASE), r"\1***REDACTED***"),
+    (
+        re.compile(
+            r"((?:api[_-]?key|password|token)\s*[:=]\s*['\"]?)([^'\"\s]{8,})", re.IGNORECASE
+        ),
+        r"\1***REDACTED***",
+    ),
 ]
 
 

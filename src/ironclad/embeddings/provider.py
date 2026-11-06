@@ -59,6 +59,7 @@ class ChromaONNXEmbeddingProvider(BaseEmbeddingProvider):
         if self._ef is None:
             try:
                 import chromadb.utils.embedding_functions as ef
+
                 self._ef = ef.DefaultEmbeddingFunction()
             except Exception as e:
                 raise EmbeddingError(

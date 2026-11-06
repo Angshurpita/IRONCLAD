@@ -42,14 +42,20 @@ def output_json(data: object) -> None:
 
 def version_callback(value: bool):
     if value:
-        console.print(f"[bold cyan]IRONCLAD[/bold cyan] version [bold green]{__version__}[/bold green]")
+        console.print(
+            f"[bold cyan]IRONCLAD[/bold cyan] version [bold green]{__version__}[/bold green]"
+        )
         raise typer.Exit()
 
 
 @app.callback()
 def main_callback(
     version: Optional[bool] = typer.Option(
-        None, "--version", "-v", help="Show the application version and exit.", callback=version_callback
+        None,
+        "--version",
+        "-v",
+        help="Show the application version and exit.",
+        callback=version_callback,
     ),
     verbose: bool = typer.Option(False, "--verbose", help="Enable verbose debug logging."),
 ):
@@ -196,7 +202,9 @@ def ingest(
     try:
         summary = run_ingestion(settings=settings, target_path=path, update=update, reindex=reindex)
     except KeyboardInterrupt:
-        err_console.print("\n[yellow]Ingestion interrupted. Knowledge base remains intact.[/yellow]")
+        err_console.print(
+            "\n[yellow]Ingestion interrupted. Knowledge base remains intact.[/yellow]"
+        )
         raise typer.Exit(code=130) from None
     except Exception as e:
         err_console.print(f"[bold red]Ingestion failed:[/bold red] {e}")
@@ -214,7 +222,12 @@ def ingest(
     table.add_column("Metric", style="dim", width=25)
     table.add_column("Value")
 
-    table.add_row("Mode", "[bold cyan]Incremental Update[/bold cyan]" if update else "[bold green]Full Ingestion[/bold green]")
+    table.add_row(
+        "Mode",
+        "[bold cyan]Incremental Update[/bold cyan]"
+        if update
+        else "[bold green]Full Ingestion[/bold green]",
+    )
     table.add_row("Target Directory", summary.target_path)
     table.add_row("Files Added", str(summary.files_added))
     table.add_row("Files Updated", str(summary.files_updated))
@@ -342,7 +355,9 @@ def ask(
 @app.command()
 def search(
     query: str = typer.Argument(..., help="Search term or phrase to retrieve matching excerpts."),
-    limit: int = typer.Option(5, "--limit", "-n", help="Maximum number of search results to return."),
+    limit: int = typer.Option(
+        5, "--limit", "-n", help="Maximum number of search results to return."
+    ),
     path: Optional[Path] = typer.Option(
         None, "--path", "-p", help="Target project path (defaults to current working directory)."
     ),
@@ -381,12 +396,14 @@ def search(
         return
 
     if not selected_context:
-        console.print(f"\n[yellow]No matching results found for:[/yellow] [bold white]{query}[/bold white]\n")
+        console.print(
+            f"\n[yellow]No matching results found for:[/yellow] [bold white]{query}[/bold white]\n"
+        )
         return
 
     console.print(
         f"\n[bold cyan]Found {len(selected_context)} matching passages[/bold cyan] "
-        f"[dim](Context: ~{total_tokens} tokens)[/dim] for [bold white]\"{query}\"[/bold white]:\n"
+        f'[dim](Context: ~{total_tokens} tokens)[/dim] for [bold white]"{query}"[/bold white]:\n'
     )
 
     for idx, res in enumerate(selected_context, start=1):
@@ -426,13 +443,17 @@ def status(
         output_json(stat.model_dump(mode="json"))
         return
 
-    table = Table(title="IRONCLAD Knowledge Base Status", show_header=True, header_style="bold cyan")
+    table = Table(
+        title="IRONCLAD Knowledge Base Status", show_header=True, header_style="bold cyan"
+    )
     table.add_column("Property", style="dim", width=25)
     table.add_column("Value")
 
     table.add_row(
         "Status",
-        "[bold green]Initialized[/bold green]" if stat.initialized else "[bold red]Not Initialized[/bold red]",
+        "[bold green]Initialized[/bold green]"
+        if stat.initialized
+        else "[bold red]Not Initialized[/bold red]",
     )
     table.add_row("Knowledge Base Path", str(stat.knowledge_base_path))
     table.add_row("Total Documents", str(stat.total_files))
@@ -444,7 +465,9 @@ def status(
     table.add_row("Inference Model", stat.inference_model)
     table.add_row(
         "Integrity",
-        "[bold green]Consistent[/bold green]" if stat.is_consistent else "[bold red]Inconsistencies Detected[/bold red]",
+        "[bold green]Consistent[/bold green]"
+        if stat.is_consistent
+        else "[bold red]Inconsistencies Detected[/bold red]",
     )
 
     console.print(table)
@@ -472,14 +495,18 @@ def doctor(
             raise typer.Exit(code=1)
         return
 
-    table = Table(title="IRONCLAD System Doctor Diagnostics", show_header=True, header_style="bold cyan")
+    table = Table(
+        title="IRONCLAD System Doctor Diagnostics", show_header=True, header_style="bold cyan"
+    )
     table.add_column("Category", style="dim", width=15)
     table.add_column("Check", style="bold", width=30)
     table.add_column("Status", width=10)
     table.add_column("Details")
 
     for check in report.checks:
-        status_text = "[bold green]PASS[/bold green]" if check.passed else "[bold red]FAIL[/bold red]"
+        status_text = (
+            "[bold green]PASS[/bold green]" if check.passed else "[bold red]FAIL[/bold red]"
+        )
         msg = check.message
         if check.hint and not check.passed:
             msg += f"\n[dim yellow]Hint: {check.hint}[/dim yellow]"

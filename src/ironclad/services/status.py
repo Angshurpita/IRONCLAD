@@ -57,10 +57,7 @@ def get_status(settings: IroncladSettings) -> IndexStatus:
                 last_ingested_at = meta.get("last_ingested_at")
                 stored_embedding_model = meta.get("embedding_model", settings.embedding_model)
 
-                if (
-                    stored_embedding_model
-                    and stored_embedding_model != settings.embedding_model
-                ):
+                if stored_embedding_model and stored_embedding_model != settings.embedding_model:
                     inconsistencies.append(
                         f"Configured embedding model ({settings.embedding_model}) differs "
                         f"from indexed embedding model ({stored_embedding_model})."
@@ -76,9 +73,7 @@ def get_status(settings: IroncladSettings) -> IndexStatus:
                 total_files = row[0] if row else 0
 
             # Check chunks count
-            cursor.execute(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name='chunks';"
-            )
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='chunks';")
             if cursor.fetchone():
                 cursor.execute("SELECT count(*) FROM chunks;")
                 row = cursor.fetchone()
@@ -118,7 +113,7 @@ def run_diagnostics(settings: IroncladSettings) -> DoctorReport:
 
     # 1. Python runtime check
     py_ver = sys.version_info
-    py_ok = (py_ver.major == 3 and py_ver.minor >= 11)
+    py_ok = py_ver.major == 3 and py_ver.minor >= 11
     checks.append(
         DoctorCheck(
             category="Runtime",
@@ -165,7 +160,9 @@ def run_diagnostics(settings: IroncladSettings) -> DoctorReport:
             category="Storage",
             name="Knowledge Base Initialized",
             passed=kb_init,
-            message="Knowledge base is initialized." if kb_init else "Knowledge base not yet initialized.",
+            message="Knowledge base is initialized."
+            if kb_init
+            else "Knowledge base not yet initialized.",
             hint=None if kb_init else "Run `ironclad init` to create the knowledge base.",
         )
     )
@@ -186,13 +183,17 @@ def run_diagnostics(settings: IroncladSettings) -> DoctorReport:
                         message="SQLite database passed PRAGMA integrity_check."
                         if ok
                         else f"Integrity check returned: {res}",
-                        hint=None if ok else "Metadata database is corrupted. Re-initialize or recover.",
+                        hint=None
+                        if ok
+                        else "Metadata database is corrupted. Re-initialize or recover.",
                     )
                 )
 
                 # Check FTS5 availability
                 try:
-                    cursor.execute("SELECT highlight(chunks_fts, 2, '', '') FROM chunks_fts LIMIT 0;")
+                    cursor.execute(
+                        "SELECT highlight(chunks_fts, 2, '', '') FROM chunks_fts LIMIT 0;"
+                    )
                     fts_ok = True
                     fts_msg = "SQLite FTS5 full-text search index is operational."
                 except Exception:
@@ -230,6 +231,7 @@ def run_diagnostics(settings: IroncladSettings) -> DoctorReport:
         if settings.vector_store_path.exists():
             try:
                 from ironclad.retrieval.vector import ChromaVectorStore
+
                 vstore = ChromaVectorStore(settings.vector_store_path)
                 v_count = vstore.count()
                 checks.append(
@@ -256,6 +258,7 @@ def run_diagnostics(settings: IroncladSettings) -> DoctorReport:
     lock_file = settings.lock_file_path
     if lock_file.exists():
         from ironclad.storage.metadata import KnowledgeBaseLock
+
         kb_lock = KnowledgeBaseLock(lock_file)
         if kb_lock._is_stale_lock():
             checks.append(
@@ -291,6 +294,7 @@ def run_diagnostics(settings: IroncladSettings) -> DoctorReport:
     # 6. Embedding runtime check
     try:
         from ironclad.embeddings.provider import get_embedding_provider
+
         embedder = get_embedding_provider(settings)
         test_vec = embedder.embed_query("ironclad test ping")
         checks.append(
@@ -316,7 +320,9 @@ def run_diagnostics(settings: IroncladSettings) -> DoctorReport:
     # 6. Inference Provider Connectivity
     provider = settings.inference_provider.lower().strip()
     if provider in ("openrouter", "openrouter.ai"):
-        has_key = bool(settings.openrouter_api_key and settings.openrouter_api_key.get_secret_value().strip())
+        has_key = bool(
+            settings.openrouter_api_key and settings.openrouter_api_key.get_secret_value().strip()
+        )
         if not has_key:
             checks.append(
                 DoctorCheck(
@@ -369,7 +375,9 @@ def run_diagnostics(settings: IroncladSettings) -> DoctorReport:
                                     name="Target Model Availability",
                                     passed=model_found,
                                     message=f"Model '{target_m}' is {'available' if model_found else 'not found'} on OpenRouter.",
-                                    hint=None if model_found else f"Verify model slug '{target_m}' on openrouter.ai/models.",
+                                    hint=None
+                                    if model_found
+                                    else f"Verify model slug '{target_m}' on openrouter.ai/models.",
                                 )
                             )
                         except Exception:
@@ -428,7 +436,9 @@ def run_diagnostics(settings: IroncladSettings) -> DoctorReport:
                             name="Ollama Model Availability",
                             passed=model_available,
                             message=f"Model '{settings.ollama_model}' {'is installed' if model_available else 'is NOT downloaded'}.",
-                            hint=None if model_available else f"Run: ollama pull {settings.ollama_model}",
+                            hint=None
+                            if model_available
+                            else f"Run: ollama pull {settings.ollama_model}",
                         )
                     )
                 else:

@@ -43,7 +43,10 @@ class OpenRouterGemmaProvider(BaseInferenceProvider):
 
     def __init__(self, settings: IroncladSettings):
         self.settings = settings
-        if not settings.openrouter_api_key or not settings.openrouter_api_key.get_secret_value().strip():
+        if (
+            not settings.openrouter_api_key
+            or not settings.openrouter_api_key.get_secret_value().strip()
+        ):
             raise ConfigurationError(
                 "OPENROUTER_API_KEY is not configured.",
                 hint="Provide OPENROUTER_API_KEY in your environment or in the .env file.",

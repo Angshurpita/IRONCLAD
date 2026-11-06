@@ -78,7 +78,10 @@ def test_uninitialized_commands_fail_cleanly(cli_runner: CliRunner, temp_project
     # ingest on uninitialized directory
     res_ingest = cli_runner.invoke(app, ["ingest", str(temp_project)])
     assert res_ingest.exit_code == KnowledgeBaseNotFoundError.exit_code
-    assert "Knowledge base not initialized" in res_ingest.stderr or "Knowledge base not initialized" in res_ingest.stdout
+    assert (
+        "Knowledge base not initialized" in res_ingest.stderr
+        or "Knowledge base not initialized" in res_ingest.stdout
+    )
 
 
 def test_cli_doctor(cli_runner: CliRunner, temp_project: Path):

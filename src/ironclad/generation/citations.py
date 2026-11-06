@@ -51,7 +51,7 @@ def validate_citations(
 ) -> CitationValidationReport:
     """
     Independently verify model citations against retrieved ground truth chunks.
-    
+
     Ensures that every citation references a real retrieved source and valid line range.
     A model's claim that evidence is sufficient does NOT override independent validation.
     """
@@ -106,7 +106,9 @@ def validate_citations(
             ]
 
         if not matched_chunks:
-            logger.warning(f"Rejected hallucinated citation: file '{raw_file}' was never retrieved.")
+            logger.warning(
+                f"Rejected hallucinated citation: file '{raw_file}' was never retrieved."
+            )
             rejected_count += 1
             notes.append(f"Citation #{idx} referenced un-retrieved file '{raw_file}'.")
             continue
@@ -151,7 +153,9 @@ def validate_citations(
     # Independent sufficiency validation:
     # If the model claimed it has sufficient evidence but every single citation was rejected,
     # we cannot claim the answer is grounded.
-    insufficient = len(verified) == 0 and len(raw_citations) > 0 and rejected_count == len(raw_citations)
+    insufficient = (
+        len(verified) == 0 and len(raw_citations) > 0 and rejected_count == len(raw_citations)
+    )
 
     return CitationValidationReport(
         verified_citations=verified,

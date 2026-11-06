@@ -60,7 +60,7 @@ def generate_grounded_answer(
 ) -> RAGResponse:
     """
     Generate an evidence-grounded answer using Gemma with independent citation validation.
-    
+
     If no evidence is supplied, immediately abstains without calling the provider.
     """
     # Immediate abstention if evidence is completely empty

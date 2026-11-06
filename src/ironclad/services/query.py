@@ -30,7 +30,7 @@ def execute_hybrid_search(
     3. Lexical BM25 search via SQLite FTS5.
     4. Reciprocal Rank Fusion (RRF) deduplication and combination.
     5. Context token budget pruning.
-    
+
     Returns:
         (budget_selected_chunks, all_fused_chunks, total_context_tokens)
     """

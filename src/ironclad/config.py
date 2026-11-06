@@ -51,10 +51,14 @@ class IroncladSettings(BaseSettings):
     project_root: Path = Field(default_factory=Path.cwd)
 
     # Inference Provider: 'openrouter' or 'ollama'
-    inference_provider: str = Field(default="openrouter", validation_alias="IRONCLAD_INFERENCE_PROVIDER")
+    inference_provider: str = Field(
+        default="openrouter", validation_alias="IRONCLAD_INFERENCE_PROVIDER"
+    )
 
     # Hosted Inference (OpenRouter / OpenAI-compatible)
-    openrouter_api_key: Optional[SecretStr] = Field(default=None, validation_alias="OPENROUTER_API_KEY")
+    openrouter_api_key: Optional[SecretStr] = Field(
+        default=None, validation_alias="OPENROUTER_API_KEY"
+    )
     openrouter_base_url: str = Field(
         default="https://openrouter.ai/api/v1", validation_alias="OPENROUTER_BASE_URL"
     )
@@ -75,7 +79,9 @@ class IroncladSettings(BaseSettings):
     )
 
     # Ingestion & Chunking Limits
-    max_file_size_bytes: int = Field(default=10 * 1024 * 1024, validation_alias="IRONCLAD_MAX_FILE_SIZE_BYTES")  # 10 MB
+    max_file_size_bytes: int = Field(
+        default=10 * 1024 * 1024, validation_alias="IRONCLAD_MAX_FILE_SIZE_BYTES"
+    )  # 10 MB
     chunk_size: int = Field(default=500, validation_alias="IRONCLAD_CHUNK_SIZE")
     chunk_overlap: int = Field(default=50, validation_alias="IRONCLAD_CHUNK_OVERLAP")
     max_context_tokens: int = Field(default=4000, validation_alias="IRONCLAD_MAX_CONTEXT_TOKENS")

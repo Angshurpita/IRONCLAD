@@ -294,8 +294,7 @@ class MetadataStore:
 
                     # Insert into FTS5
                     fts_records = [
-                        (c.chunk_id, c.file_path, c.content, c.heading or "")
-                        for c in chunks
+                        (c.chunk_id, c.file_path, c.content, c.heading or "") for c in chunks
                     ]
                     cursor.executemany(
                         """

@@ -16,7 +16,7 @@ def reciprocal_rank_fusion(
 ) -> List[SearchResult]:
     """
     Merge and deduplicate semantic vector candidates and lexical candidates using RRF.
-    
+
     Formula:
         RRF_Score(d) = sum_{m in {vector, lexical}} 1 / (k + rank_m(d))
     """
