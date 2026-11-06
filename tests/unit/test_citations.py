@@ -82,3 +82,48 @@ def test_validate_citations_abstention():
     report = validate_citations([], evidence, model_claimed_insufficient=True)
     assert report.insufficient_evidence is True
     assert len(report.verified_citations) == 0
+
+
+def test_validate_citations_malformed_formats():
+    """Verify robust parsing of non-dict, null, and string line numbers."""
+    evidence = [
+        SearchResult(
+            chunk_id="chunk_1",
+            file_path="src/auth.py",
+            start_line=10,
+            end_line=30,
+            content="def validate_jwt(token):\n    return verify(token)",
+            score=0.9,
+        )
+    ]
+    raw_citations = [
+        # Formatted string "L12"
+        {
+            "file_path": "src/auth.py",
+            "start_line": "L12",
+            "end_line": "L15",
+            "excerpt": "validate_jwt",
+        },
+        # Null values
+        {
+            "file_path": "src/auth.py",
+            "start_line": None,
+            "end_line": None,
+            "excerpt": "validate_jwt",
+        },
+        # Range string "12-18"
+        {
+            "file_path": "src/auth.py",
+            "start_line": "12-18",
+            "end_line": "20",
+            "excerpt": "validate_jwt",
+        },
+        # Non-dict item
+        "src/auth.py",
+    ]
+
+    report = validate_citations(raw_citations, evidence)
+    # 3 valid chunks with parsed line numbers should succeed, 1 non-dict rejected
+    assert len(report.verified_citations) >= 1
+    assert report.rejected_citations_count >= 1
+    assert any("not a valid dictionary object" in note for note in report.notes)

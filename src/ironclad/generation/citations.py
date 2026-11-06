@@ -25,6 +25,25 @@ def normalize_path(p: str) -> str:
     return p.strip().replace("\\", "/").lstrip("/")
 
 
+def _parse_line_number(val: Any, default: int = 1) -> int:
+    """Safely parse line number from LLM JSON output (handles int, strings, 'L10', '10-20', null)."""
+    if val is None:
+        return default
+    if isinstance(val, int):
+        return max(1, val)
+    if isinstance(val, float):
+        return max(1, int(val))
+    if isinstance(val, str):
+        cleaned = val.strip().lstrip("lL").strip()
+        if "-" in cleaned:
+            cleaned = cleaned.split("-")[0].strip()
+        try:
+            return max(1, int(cleaned))
+        except (ValueError, TypeError):
+            return default
+    return default
+
+
 def validate_citations(
     raw_citations: List[Dict[str, Any]],
     evidence: List[SearchResult],
@@ -65,10 +84,17 @@ def validate_citations(
         evidence_by_path.setdefault(norm, []).append(item)
 
     for idx, raw in enumerate(raw_citations, start=1):
+        if not isinstance(raw, dict):
+            rejected_count += 1
+            notes.append(f"Citation #{idx} was not a valid dictionary object.")
+            continue
+
         raw_file = str(raw.get("file_path", "")).strip()
         norm_raw_file = normalize_path(raw_file)
-        start_line = int(raw.get("start_line", 1))
-        end_line = int(raw.get("end_line", start_line))
+        start_line = _parse_line_number(raw.get("start_line"), default=1)
+        end_line = _parse_line_number(raw.get("end_line"), default=start_line)
+        if end_line < start_line:
+            end_line = start_line
         excerpt = str(raw.get("excerpt", "")).strip()
 
         # Check if file exists in retrieved evidence
