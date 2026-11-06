@@ -223,12 +223,19 @@ def discover_files(
         for filename in filenames:
             file_path = Path(dirpath) / filename
 
-            # Skip symlinks to prevent loops or pointing outside workspace
+            # Skip symlinks pointing outside workspace
             if file_path.is_symlink():
-                resolved_target = file_path.resolve()
-                if not str(resolved_target).startswith(str(resolved_root)):
-                    logger.debug(f"Skipping symlink pointing outside root: {file_path}")
+                try:
+                    resolved_target = file_path.resolve()
+                    if not str(resolved_target).startswith(str(resolved_root)):
+                        logger.debug(f"Skipping symlink pointing outside root: {file_path}")
+                        continue
+                except (OSError, RuntimeError):
                     continue
+
+            # Skip directories or symlinks to directories appearing in filenames
+            if file_path.is_dir():
+                continue
 
             rel_file_path = os.path.relpath(str(file_path), str(resolved_root))
 

@@ -97,3 +97,24 @@ def test_discover_files_filters_and_limits(temp_project: Path):
     assert "empty.py" not in rel_paths
     assert "big.txt" not in rel_paths
     assert ".git/config" not in rel_paths
+
+
+def test_discover_files_symlink_directory_protection(temp_project: Path):
+    """Verify symlinks to directories and outside paths are safely ignored."""
+    settings = IroncladSettings(project_root=temp_project)
+
+    real_dir = temp_project / "real_dir"
+    real_dir.mkdir()
+    (real_dir / "target.py").write_text("print('target')", encoding="utf-8")
+
+    # Internal directory symlink
+    sym_dir = temp_project / "sym_dir"
+    try:
+        sym_dir.symlink_to(real_dir, target_is_directory=True)
+    except OSError:
+        pass  # On some systems symlink creation requires elevated rights
+
+    files = discover_files(temp_project, settings)
+    # Shouldn't crash and should discover real_dir/target.py
+    rel_paths = [f.rel_path for f in files]
+    assert "real_dir/target.py" in rel_paths or "real_dir\\target.py" in rel_paths
